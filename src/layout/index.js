@@ -93,6 +93,17 @@ export function Layout (props) {
           </header>
 
           <div className='action-bar'>
+            <div className='search'>
+              {/*   <SearchField
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                onSearch={() => { window.location.replace(`/${ROUTES.students}?s=${searchTerm || ''}`) }}
+                placeholder='Søk etter elev ...'
+                className='search-input'
+                rounded
+              /> */}
+            </div>
+
             <div className='user'>
               <div className='user-name'>
                 <Paragraph>{user.displayName}</Paragraph>
