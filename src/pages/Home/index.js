@@ -30,7 +30,7 @@ export const Home = () => {
   const send = async () => {
     console.log('send', currentApiMethod, 'start')
     if (currentApiMethod === 'POST' && !currentBody) {
-      console.log('send:', currentApiMethod, 'Body is required for POST')
+      setCurrentOutput('Body is required for POST')
       return
     }
 
@@ -38,9 +38,7 @@ export const Home = () => {
     setCurrentOutput('')
 
     try {
-      const data = currentApiMethod === 'POST' ? await apiPost(currentApiUrl, JSON.parse(currentBody)) : await apiGet(currentApiUrl)
-      console.log('send', currentApiMethod, 'Data:', data)
-      if (!data) setCurrentOutput('No body returned for the response')
+      if (!data) setCurrentOutput('No body returned for the response.\nOpen Console in Developer Tools for more information')
       else setCurrentOutput(JSON.stringify(data, null, 2))
     } catch (error) {
       console.log('send', currentApiMethod, 'Error:', error)
