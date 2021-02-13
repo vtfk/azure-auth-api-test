@@ -5,6 +5,7 @@ import { useSession } from '@vtfk/react-msal'
 import { Layout } from '../../layout'
 
 import highlightjs from 'highlightjs'
+import axios from 'axios'
 
 import './styles.scss'
 import 'highlightjs/styles/github.css'
@@ -16,6 +17,7 @@ export const Home = () => {
   const [currentBody, setCurrentBody] = useState('')
   const [currentApiUrl, setCurrentApiUrl] = useState('')
   const [currentApiMethod, setCurrentApiMethod] = useState('POST')
+  const [currentApiProvider, setCurrentApiProvider] = useState('MSAL')
   const [currentOutput, setCurrentOutput] = useState('{}')
   const [currentHighlightedOutput, setCurrentHighlightedOutput] = useState('{}')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -28,7 +30,7 @@ export const Home = () => {
   }
 
   const send = async () => {
-    console.log('send', currentApiMethod, 'start')
+    console.log('send', currentApiMethod, currentApiProvider, 'start')
     if (currentApiMethod === 'POST' && !currentBody) {
       setCurrentOutput('Body is required for POST')
       return
@@ -38,15 +40,17 @@ export const Home = () => {
     setCurrentOutput('')
 
     try {
+      const data = currentApiProvider === 'MSAL' ? (currentApiMethod === 'POST' ? await apiPost(currentApiUrl, JSON.parse(currentBody)) : await apiGet(currentApiUrl)) : (currentApiMethod === 'POST' ? await axios.post(currentApiUrl, JSON.parse(currentBody)) : await axios.get(currentApiUrl))
+      console.log('send', currentApiMethod, currentApiProvider, 'Data:', data)
       if (!data) setCurrentOutput('No body returned for the response.\nOpen Console in Developer Tools for more information')
       else setCurrentOutput(JSON.stringify(data, null, 2))
     } catch (error) {
-      console.log('send', currentApiMethod, 'Error:', error)
+      console.log('send', currentApiMethod, currentApiProvider, 'Error:', error)
       setCurrentOutput(error.message)
     }
     
     setIsSubmitting(false)
-    console.log('send', currentApiMethod, 'finished')
+    console.log('send', currentApiMethod, currentApiProvider, 'finished')
   }
 
   useEffect(() => {
@@ -65,18 +69,46 @@ export const Home = () => {
             placeholder='API URL'
             onChange={event => setCurrentApiUrl(event.target.value)}
             value={currentApiUrl} />
-          <RadioButton
-            label='GET'
-            value='GET'
-            name='select-get'
-            checked={currentApiMethod === 'GET'}
-            onChange={() => setCurrentApiMethod('GET')} />
-          <RadioButton
-            label='POST'
-            value='POST'
-            name='select-post'
-            checked={currentApiMethod === 'POST'}
-            onChange={() => setCurrentApiMethod('POST')} />
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <RadioButton
+                    label='GET'
+                    value='GET'
+                    name='select-get'
+                    checked={currentApiMethod === 'GET'}
+                    onChange={() => setCurrentApiMethod('GET')} />
+                </td>
+                <td>
+                  <RadioButton
+                    label='POST'
+                    value='POST'
+                    name='select-post'
+                    checked={currentApiMethod === 'POST'}
+                    onChange={() => setCurrentApiMethod('POST')} />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <RadioButton
+                    label='MSAL'
+                    value='MSAL'
+                    name='select-msal'
+                    checked={currentApiProvider === 'MSAL'}
+                    onChange={() => setCurrentApiProvider('MSAL')} />
+                </td>
+                <td>
+                  <RadioButton
+                    label='AXIOS'
+                    value='AXIOS'
+                    name='select-axios'
+                    checked={currentApiProvider === 'AXIOS'}
+                    onChange={() => setCurrentApiProvider('AXIOS')} />
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <CodeMirror
             className={currentApiMethod === 'GET' ? 'readonly' : undefined}
             options={{
