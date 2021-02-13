@@ -140,10 +140,7 @@ export const Home = () => {
                 type='primary'
                 size='small'
                 onClick={() => { send() }}
-                spinner={isSubmitting}>
-                Send
-              </Button>
-            </div>
+            disabled={currentApiUrl === ''}
           <pre dangerouslySetInnerHTML={{ __html: currentHighlightedOutput}}></pre>
         </>
       }
