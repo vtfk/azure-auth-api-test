@@ -1,5 +1,4 @@
 import { Paragraph } from '@vtfk/components'
-import { Link } from 'react-router-dom'
 import { Layout } from '../../layout'
 
 export const Help = () => {

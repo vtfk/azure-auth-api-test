@@ -25,7 +25,7 @@ const AppContent = () => {
 }
 
 export const App = () => {
-  const { isAuthenticated, login, authStatus, user } = useSession()
+  const { isAuthenticated, login, authStatus } = useSession()
 
   if (['pending'].includes(authStatus)) {
     return <div>Loading...</div>

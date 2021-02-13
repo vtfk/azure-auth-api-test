@@ -14,15 +14,15 @@ import 'codemirror/theme/material.css'
 
 export const Home = () => {
   const { user, apiPost, apiGet } = useSession()
-  const [currentBody, setCurrentBody] = useState('')
   const [currentApiUrl, setCurrentApiUrl] = useState('')
+  const [currentBody, setCurrentBody] = useState('')
   const [currentApiMethod, setCurrentApiMethod] = useState('POST')
   const [currentApiProvider, setCurrentApiProvider] = useState('MSAL')
   const [currentOutput, setCurrentOutput] = useState('{}')
   const [currentHighlightedOutput, setCurrentHighlightedOutput] = useState('{}')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  function prettify() {
+  function prettify () {
     const json = JSON.parse(currentBody)
     const jsonStr = JSON.stringify(json, null, 2)
 
@@ -48,7 +48,7 @@ export const Home = () => {
       console.log('send', currentApiMethod, currentApiProvider, 'Error:', error)
       setCurrentOutput(error.message)
     }
-    
+
     setIsSubmitting(false)
     console.log('send', currentApiMethod, currentApiProvider, 'finished')
   }
@@ -63,87 +63,96 @@ export const Home = () => {
       <Heading2 as='h1' className='page-title'>
         {`Hei ${user.givenName} og velkommen til Azure Auth API test`}
       </Heading2>
-      {
-        <>
-          <TextField
-            placeholder='API URL'
-            onChange={event => setCurrentApiUrl(event.target.value)}
-            value={currentApiUrl} />
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <RadioButton
-                    label='GET'
-                    value='GET'
-                    name='select-get'
-                    checked={currentApiMethod === 'GET'}
-                    onChange={() => setCurrentApiMethod('GET')} />
-                </td>
-                <td>
-                  <RadioButton
-                    label='POST'
-                    value='POST'
-                    name='select-post'
-                    checked={currentApiMethod === 'POST'}
-                    onChange={() => setCurrentApiMethod('POST')} />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <RadioButton
-                    label='MSAL'
-                    value='MSAL'
-                    name='select-msal'
-                    checked={currentApiProvider === 'MSAL'}
-                    onChange={() => setCurrentApiProvider('MSAL')} />
-                </td>
-                <td>
-                  <RadioButton
-                    label='AXIOS'
-                    value='AXIOS'
-                    name='select-axios'
-                    checked={currentApiProvider === 'AXIOS'}
-                    onChange={() => setCurrentApiProvider('AXIOS')} />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <CodeMirror
-            className={currentApiMethod === 'GET' ? 'readonly' : undefined}
-            options={{
-              mode: {
-                name: 'javascript',
-                json: true,
-                statementIndent: 2
-              },
-              theme: 'material',
-              lineNumbers: true,
-              lineWrapping: false,
-              indentWithTabs: false,
-              tabSize: 2,
-              smartIndent: true,
-              readOnly: currentApiMethod === 'GET'
-            }}
-            value={currentBody}
-            onChange={(editor, data, value) => setCurrentBody(value)}
-            autoCursor={false}
-             />
-            <div className="button-row">
-              <Button
-                type='secondary'
-                size='small'
-                onClick={() => { prettify() }}>
-                Prettify
-              </Button>
-              <Button
-                type='primary'
-                size='small'
-                onClick={() => { send() }}
+      <>
+        <TextField
+          placeholder='API URL'
+          onChange={event => setCurrentApiUrl(event.target.value)}
+          value={currentApiUrl}
+        />
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <RadioButton
+                  label='GET'
+                  value='GET'
+                  name='select-get'
+                  checked={currentApiMethod === 'GET'}
+                  onChange={() => setCurrentApiMethod('GET')}
+                />
+              </td>
+              <td>
+                <RadioButton
+                  label='POST'
+                  value='POST'
+                  name='select-post'
+                  checked={currentApiMethod === 'POST'}
+                  onChange={() => setCurrentApiMethod('POST')}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <RadioButton
+                  label='MSAL'
+                  value='MSAL'
+                  name='select-msal'
+                  checked={currentApiProvider === 'MSAL'}
+                  onChange={() => setCurrentApiProvider('MSAL')}
+                />
+              </td>
+              <td>
+                <RadioButton
+                  label='AXIOS'
+                  value='AXIOS'
+                  name='select-axios'
+                  checked={currentApiProvider === 'AXIOS'}
+                  onChange={() => setCurrentApiProvider('AXIOS')}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeMirror
+          className={currentApiMethod === 'GET' ? 'readonly' : undefined}
+          options={{
+            mode: {
+              name: 'javascript',
+              json: true,
+              statementIndent: 2
+            },
+            theme: 'material',
+            lineNumbers: true,
+            lineWrapping: false,
+            indentWithTabs: false,
+            tabSize: 2,
+            smartIndent: true,
+            readOnly: currentApiMethod === 'GET'
+          }}
+          value={currentBody}
+          onChange={(editor, data, value) => setCurrentBody(value)}
+          autoCursor={false}
+        />
+        <div className='button-row'>
+          <Button
+            type='secondary'
+            size='small'
+            onClick={() => { prettify() }}
+          >
+            Prettify
+          </Button>
+          <Button
+            type='primary'
+            size='small'
+            onClick={() => { send() }}
+            spinner={isSubmitting}
             disabled={currentApiUrl === ''}
-          <pre dangerouslySetInnerHTML={{ __html: currentHighlightedOutput}}></pre>
-        </>
-      }
+          >
+            Send
+          </Button>
+        </div>
+        <pre dangerouslySetInnerHTML={{ __html: currentHighlightedOutput }} />
+      </>
     </Layout>
   )
 }
