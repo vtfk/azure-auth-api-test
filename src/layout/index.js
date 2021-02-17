@@ -8,14 +8,14 @@ import { ROUTES } from '../config'
 import './styles.scss'
 
 export function Layout (props) {
-  const { user, logout, token } = useSession()
+  const { user, logout, idToken } = useSession()
   const location = useLocation()
   const [openTopNavSide, setOpenTopNavSide] = useState(false)
   const [scrollLock, setScrollLock] = useState(false)
 
   function copyToken () {
     const tokenField = document.getElementById('hidden-token')
-    tokenField.value = token
+    tokenField.value = idToken
     tokenField.select()
     tokenField.setSelectionRange(0, 99999) // for mobile devices
     document.execCommand('copy')
