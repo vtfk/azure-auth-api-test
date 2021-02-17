@@ -27,6 +27,20 @@
     }
   }
 
+  .action-row {
+    //width: 100%;
+
+    .action-table {
+      display: inline-block;
+    }
+
+    .action-info {
+      //width: 75%;
+      float: right;
+      text-align: right;
+    }
+  }
+
   .button-row {
     margin-top: 15px;
     margin-bottom: 25px;

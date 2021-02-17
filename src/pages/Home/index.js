@@ -21,6 +21,9 @@ export const Home = () => {
   const [currentOutput, setCurrentOutput] = useState('{}')
   const [currentHighlightedOutput, setCurrentHighlightedOutput] = useState('{}')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [currentStartDate, setCurrentStartDate] = useState(null)
+  const [currentStopDate, setCurrentStopDate] = useState(null)
+  const [currentElapsed, setCurrentElapsed] = useState(-1)
 
   function prettify () {
     const json = JSON.parse(currentBody)
@@ -29,10 +32,24 @@ export const Home = () => {
     setCurrentBody(jsonStr)
   }
 
+  function padDate(num) {
+    return num >= 10 ? num : `0${num}`
+  }
+
+  function prettifyDate(date, skipDate, skipTime) {
+    const pretty = `${padDate(date.getDate())}.${padDate(date.getMonth() + 1)}.${date.getFullYear()} ${padDate(date.getHours())}:${padDate(date.getMinutes())}:${padDate(date.getSeconds())}`
+    return !!skipDate && !!skipTime ? '' : !!skipDate ? pretty.split(' ')[1] : !!skipTime ? pretty.split(' ')[0] : pretty
+  }
+
   const send = async () => {
+    const startDate = new Date()
+    setCurrentStartDate(startDate)
     console.log('send', currentApiMethod, currentApiProvider, 'start')
     if (currentApiMethod === 'POST' && !currentBody) {
       setCurrentOutput('Body is required for POST')
+      console.log('send', currentApiMethod, currentApiProvider, 'finished')
+      setCurrentStopDate(new Date())
+      setCurrentElapsed(-1)
       return
     }
 
@@ -50,6 +67,10 @@ export const Home = () => {
     }
 
     setIsSubmitting(false)
+    const stopDate = new Date()
+    const elapsed = (stopDate - startDate) / 1000
+    setCurrentStopDate(stopDate)
+    setCurrentElapsed(elapsed)
     console.log('send', currentApiMethod, currentApiProvider, 'finished')
   }
 
@@ -69,50 +90,73 @@ export const Home = () => {
           onChange={event => setCurrentApiUrl(event.target.value)}
           value={currentApiUrl}
         />
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <RadioButton
-                  label='GET'
-                  value='GET'
-                  name='select-get'
-                  checked={currentApiMethod === 'GET'}
-                  onChange={() => setCurrentApiMethod('GET')}
-                />
-              </td>
-              <td>
-                <RadioButton
-                  label='POST'
-                  value='POST'
-                  name='select-post'
-                  checked={currentApiMethod === 'POST'}
-                  onChange={() => setCurrentApiMethod('POST')}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <RadioButton
-                  label='MSAL'
-                  value='MSAL'
-                  name='select-msal'
-                  checked={currentApiProvider === 'MSAL'}
-                  onChange={() => setCurrentApiProvider('MSAL')}
-                />
-              </td>
-              <td>
-                <RadioButton
-                  label='AXIOS'
-                  value='AXIOS'
-                  name='select-axios'
-                  checked={currentApiProvider === 'AXIOS'}
-                  onChange={() => setCurrentApiProvider('AXIOS')}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className='action-row'>
+          <table className='action-table'>
+            <tbody>
+              <tr>
+                <td>
+                  <RadioButton
+                    label='GET'
+                    value='GET'
+                    name='select-get'
+                    checked={currentApiMethod === 'GET'}
+                    onChange={() => setCurrentApiMethod('GET')}
+                  />
+                </td>
+                <td>
+                  <RadioButton
+                    label='POST'
+                    value='POST'
+                    name='select-post'
+                    checked={currentApiMethod === 'POST'}
+                    onChange={() => setCurrentApiMethod('POST')}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <RadioButton
+                    label='MSAL'
+                    value='MSAL'
+                    name='select-msal'
+                    checked={currentApiProvider === 'MSAL'}
+                    onChange={() => setCurrentApiProvider('MSAL')}
+                  />
+                </td>
+                <td>
+                  <RadioButton
+                    label='AXIOS'
+                    value='AXIOS'
+                    name='select-axios'
+                    checked={currentApiProvider === 'AXIOS'}
+                    onChange={() => setCurrentApiProvider('AXIOS')}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table className='action-info'>
+            <tbody>
+              <tr>
+                <td>
+                  {
+                    !!currentStartDate && isSubmitting ?
+                      <>
+                        <b>Start:</b> {prettifyDate(currentStartDate)}
+                      </>
+                    : !!currentStopDate && !isSubmitting ? 
+                      <>
+                        <b>Start:</b> {prettifyDate(currentStartDate)}<br/>
+                        <b>Stop:</b> {prettifyDate(currentStopDate)}<br/>
+                        <b>Elapsed seconds:</b> {currentElapsed > -1 ? currentElapsed : ((currentStopDate - currentStartDate) / 1000)}
+                      </>
+                    : ''
+                  }
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <CodeMirror
           className={currentApiMethod === 'GET' ? 'readonly' : undefined}
           options={{
