@@ -32,13 +32,13 @@ export const Home = () => {
     setCurrentBody(jsonStr)
   }
 
-  function padDate(num) {
+  function padDate (num) {
     return num >= 10 ? num : `0${num}`
   }
 
-  function prettifyDate(date, skipDate, skipTime) {
+  function prettifyDate (date, skipDate, skipTime) {
     const pretty = `${padDate(date.getDate())}.${padDate(date.getMonth() + 1)}.${date.getFullYear()} ${padDate(date.getHours())}:${padDate(date.getMinutes())}:${padDate(date.getSeconds())}`
-    return !!skipDate && !!skipTime ? '' : !!skipDate ? pretty.split(' ')[1] : !!skipTime ? pretty.split(' ')[0] : pretty
+    return skipDate && skipTime ? '' : skipDate ? pretty.split(' ')[1] : skipTime ? pretty.split(' ')[0] : pretty
   }
 
   const send = async () => {
@@ -140,17 +140,21 @@ export const Home = () => {
               <tr>
                 <td>
                   {
-                    !!currentStartDate && isSubmitting ?
-                      <>
-                        <b>Start:</b> {prettifyDate(currentStartDate)}
-                      </>
-                    : !!currentStopDate && !isSubmitting ? 
-                      <>
-                        <b>Start:</b> {prettifyDate(currentStartDate)}<br/>
-                        <b>Stop:</b> {prettifyDate(currentStopDate)}<br/>
-                        <b>Elapsed seconds:</b> {currentElapsed > -1 ? currentElapsed : ((currentStopDate - currentStartDate) / 1000)}
-                      </>
-                    : ''
+                    !!currentStartDate && isSubmitting
+                      ? (
+                        <>
+                          <b>Start:</b> {prettifyDate(currentStartDate)}
+                        </>
+                        )
+                      : !!currentStopDate && !isSubmitting
+                          ? (
+                            <>
+                              <b>Start:</b> {prettifyDate(currentStartDate)}<br />
+                              <b>Stop:</b> {prettifyDate(currentStopDate)}<br />
+                              <b>Elapsed seconds:</b> {currentElapsed > -1 ? currentElapsed : ((currentStopDate - currentStartDate) / 1000)}
+                            </>
+                            )
+                          : ''
                   }
                 </td>
               </tr>
