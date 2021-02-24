@@ -57,7 +57,8 @@ export const Home = () => {
     setCurrentOutput('')
 
     try {
-      const data = currentApiProvider === 'MSAL' ? (currentApiMethod === 'POST' ? await apiPost(currentApiUrl, JSON.parse(currentBody)) : await apiGet(currentApiUrl)) : (currentApiMethod === 'POST' ? await axios.post(currentApiUrl, JSON.parse(currentBody)) : await axios.get(currentApiUrl))
+      const result = currentApiProvider === 'MSAL' ? (currentApiMethod === 'POST' ? await apiPost(currentApiUrl, JSON.parse(currentBody)) : await apiGet(currentApiUrl)) : (currentApiMethod === 'POST' ? await axios.post(currentApiUrl, JSON.parse(currentBody)) : await axios.get(currentApiUrl))
+      const data = currentApiProvider === 'MSAL' ? result : result.data
       console.log('send', currentApiMethod, currentApiProvider, 'Data:', data)
       if (!data) setCurrentOutput('No body returned for the response.\nOpen Console in Developer Tools for more information')
       else setCurrentOutput(JSON.stringify(data, null, 2))
