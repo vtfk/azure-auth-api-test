@@ -6,7 +6,7 @@
     "@vtfk/components": "0.1.4",
     "@vtfk/react-msal": "1.0.6",
     "axios": "0.21.1",
-    "codemirror": "5.59.3",
+    "codemirror": "5.59.4",
     "highlightjs": "9.16.2",
     "prop-types": "15.7.2",
     "react": "17.0.1",
