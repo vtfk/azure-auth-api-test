@@ -5,7 +5,6 @@
   "dependencies": {
     "@vtfk/components": "0.2.1",
     "@vtfk/react-msal": "2.0.0",
-    "axios": "0.21.1",
     "codemirror": "5.60.0",
     "highlightjs": "9.16.2",
     "prop-types": "15.7.2",

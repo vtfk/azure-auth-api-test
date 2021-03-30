@@ -5,7 +5,6 @@ import { useSession } from '@vtfk/react-msal'
 import { Layout } from '../../layout'
 
 import highlightjs from 'highlightjs'
-import axios from 'axios'
 
 import './styles.scss'
 import 'highlightjs/styles/github.css'
@@ -17,7 +16,7 @@ export const Home = () => {
   const [currentApiUrl, setCurrentApiUrl] = useState('')
   const [currentBody, setCurrentBody] = useState('')
   const [currentApiMethod, setCurrentApiMethod] = useState('POST')
-  const [currentApiProvider, setCurrentApiProvider] = useState('MSAL')
+  const [showFullResponse, setShowFullResponse] = useState(true)
   const [currentOutput, setCurrentOutput] = useState('{}')
   const [currentHighlightedOutput, setCurrentHighlightedOutput] = useState('{}')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -44,10 +43,10 @@ export const Home = () => {
   const send = async () => {
     const startDate = new Date()
     setCurrentStartDate(startDate)
-    console.log('send', currentApiMethod, currentApiProvider, 'start')
+    console.log('send', currentApiMethod, (showFullResponse ? 'full response' : 'data only'), 'start')
     if (currentApiMethod === 'POST' && !currentBody) {
       setCurrentOutput('Body is required for POST')
-      console.log('send', currentApiMethod, currentApiProvider, 'finished')
+      console.log('send', currentApiMethod, (showFullResponse ? 'full response' : 'data only'), 'finished')
       setCurrentStopDate(new Date())
       setCurrentElapsed(-1)
       return
@@ -57,13 +56,12 @@ export const Home = () => {
     setCurrentOutput('')
 
     try {
-      const result = currentApiProvider === 'MSAL' ? (currentApiMethod === 'POST' ? await apiPost(currentApiUrl, JSON.parse(currentBody)) : await apiGet(currentApiUrl)) : (currentApiMethod === 'POST' ? await axios.post(currentApiUrl, JSON.parse(currentBody)) : await axios.get(currentApiUrl))
-      const data = currentApiProvider === 'MSAL' ? result : result.data
-      console.log('send', currentApiMethod, currentApiProvider, 'Data:', data)
+      const { data, headers, status } = await (currentApiMethod === 'POST' ? apiPost(currentApiUrl, JSON.parse(currentBody), true) : apiGet(currentApiUrl, true))
+      console.log('send', currentApiMethod, (showFullResponse ? 'full response' : 'data only'), 'Status:', status, 'Headers:', headers, 'Data:', data)
       if (!data) setCurrentOutput('No body returned for the response.\nOpen Console in Developer Tools for more information')
-      else setCurrentOutput(JSON.stringify(data, null, 2))
+      else setCurrentOutput(JSON.stringify(showFullResponse ? { status, headers, data } : data, null, 2))
     } catch (error) {
-      console.log('send', currentApiMethod, currentApiProvider, 'Error:', error)
+      console.log('send', currentApiMethod, (showFullResponse ? 'full response' : 'data only'), 'Error:', error)
       setCurrentOutput(error.message)
     }
 
@@ -72,7 +70,7 @@ export const Home = () => {
     const elapsed = (stopDate - startDate) / 1000
     setCurrentStopDate(stopDate)
     setCurrentElapsed(elapsed)
-    console.log('send', currentApiMethod, currentApiProvider, 'finished')
+    console.log('send', currentApiMethod, (showFullResponse ? 'full response' : 'data only'), 'finished')
   }
 
   useEffect(() => {
@@ -117,20 +115,20 @@ export const Home = () => {
               <tr>
                 <td>
                   <RadioButton
-                    label='MSAL'
-                    value='MSAL'
-                    name='select-msal'
-                    checked={currentApiProvider === 'MSAL'}
-                    onChange={() => setCurrentApiProvider('MSAL')}
+                    label='Data only'
+                    value='DATA'
+                    name='select-data'
+                    checked={!showFullResponse}
+                    onChange={() => setShowFullResponse(false)}
                   />
                 </td>
                 <td>
                   <RadioButton
-                    label='AXIOS'
-                    value='AXIOS'
-                    name='select-axios'
-                    checked={currentApiProvider === 'AXIOS'}
-                    onChange={() => setCurrentApiProvider('AXIOS')}
+                    label='Full response'
+                    value='FULL'
+                    name='select-full'
+                    checked={showFullResponse}
+                    onChange={() => setShowFullResponse(true)}
                   />
                 </td>
               </tr>
