@@ -8,14 +8,14 @@ import { ROUTES } from '../config'
 import './styles.scss'
 
 export function Layout (props) {
-  const { user, logout, idToken } = useSession()
+  const { user, logout, idToken, token } = useSession()
   const location = useLocation()
   const [openTopNavSide, setOpenTopNavSide] = useState(false)
   const [scrollLock, setScrollLock] = useState(false)
 
-  function copyToken () {
+  function copyToken (type) {
     const tokenField = document.getElementById('hidden-token')
-    tokenField.value = idToken
+    tokenField.value = type === 'idToken' ? idToken : token
     tokenField.select()
     tokenField.setSelectionRange(0, 99999) // for mobile devices
     document.execCommand('copy')
@@ -59,7 +59,8 @@ export function Layout (props) {
               </div>
               <div className='user-menu'>
                 <IconDropdownNav>
-                  <IconDropdownNavItem onClick={() => copyToken()} title='Copy token' />
+                  <IconDropdownNavItem onClick={() => copyToken('idToken')} title='Copy id-token' />
+                  <IconDropdownNavItem onClick={() => copyToken('token')} title='Copy token' />
                   <IconDropdownNavItem onClick={() => logout()} title='Logg ut' />
                 </IconDropdownNav>
               </div>
@@ -122,7 +123,8 @@ export function Layout (props) {
               <InitialsBadge className='user-image' firstName={user.givenName} lastName={user.surname} />
               <div className='user-menu'>
                 <IconDropdownNav>
-                  <IconDropdownNavItem onClick={() => copyToken()} title='Copy token' />
+                  <IconDropdownNavItem onClick={() => copyToken('idToken')} title='Copy id-token' />
+                  <IconDropdownNavItem onClick={() => copyToken('token')} title='Copy token' />
                   <IconDropdownNavItem onClick={() => logout()} title='Logg ut' />
                 </IconDropdownNav>
               </div>
