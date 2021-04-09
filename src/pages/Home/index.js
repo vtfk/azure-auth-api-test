@@ -1,13 +1,12 @@
 import { Heading2, TextField, Button, RadioButton } from '@vtfk/components'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { UnControlled as CodeMirror } from 'react-codemirror2'
 import { useSession } from '@vtfk/react-msal'
 import { Layout } from '../../layout'
-
-import highlightjs from 'highlightjs'
+import SyntaxHighlighter from 'react-syntax-highlighter'
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
 import './styles.scss'
-import 'highlightjs/styles/github.css'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
 
@@ -18,7 +17,6 @@ export const Home = () => {
   const [currentApiMethod, setCurrentApiMethod] = useState('POST')
   const [showFullResponse, setShowFullResponse] = useState(true)
   const [currentOutput, setCurrentOutput] = useState('{}')
-  const [currentHighlightedOutput, setCurrentHighlightedOutput] = useState('{}')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentStartDate, setCurrentStartDate] = useState(null)
   const [currentStopDate, setCurrentStopDate] = useState(null)
@@ -72,11 +70,6 @@ export const Home = () => {
     setCurrentElapsed(elapsed)
     console.log('send', currentApiMethod, (showFullResponse ? 'full response' : 'data only'), 'finished')
   }
-
-  useEffect(() => {
-    const highlighted = highlightjs.highlightAuto(currentOutput).value
-    setCurrentHighlightedOutput(highlighted)
-  }, [currentOutput])
 
   return (
     <Layout className='home'>
@@ -198,7 +191,9 @@ export const Home = () => {
             Send
           </Button>
         </div>
-        <pre dangerouslySetInnerHTML={{ __html: currentHighlightedOutput }} />
+        <SyntaxHighlighter language='json' className='code' style={docco}>
+          {currentOutput}
+        </SyntaxHighlighter>
       </>
     </Layout>
   )
