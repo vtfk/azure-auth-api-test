@@ -5,7 +5,7 @@
   "dependencies": {
     "@vtfk/components": "0.2.1",
     "@vtfk/react-msal": "2.0.2",
-    "codemirror": "5.65.1",
+    "codemirror": "5.65.2",
     "react": "17.0.2",
     "react-codemirror2": "7.2.1",
     "react-dom": "17.0.2",
