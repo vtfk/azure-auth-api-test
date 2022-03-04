@@ -22,10 +22,6 @@
 
   .sidenav {
     min-width: $baseUnit * 20;
-
-    @media(max-width: 1000px) {
-      display: none;
-    }
   }
 
   .action-bar {
@@ -124,7 +120,7 @@
       }
     }
 
-    @media(min-width: 1000px) {
+    @media(min-width: 1001x) {
       display: none;
     }
   }
@@ -140,7 +136,7 @@
     transition: all 400ms ease-in-out;
     display: none;
 
-    @media(min-width: 1000px) {
+    @media(min-width: 1001px) {
       display: none;
     }
 
