@@ -45,7 +45,7 @@ export function Layout (props) {
       <SkipLink href='#main-content'>Hopp til hovedinnhold</SkipLink>
 
       <div className='layout'>
-        <SideNav title={<>API test</>}>
+        <SideNav title='API test'>
           <SideNavItem icon={<Icon name='home' />} active={location.pathname === '/'} href='/' title='Forside' />
           <SideNavItem icon={<Icon name='help' />} active={location.pathname === `/${ROUTES.HELP}`} href={`/${ROUTES.HELP}`} title='Hjelp' />
         </SideNav>
@@ -59,9 +59,9 @@ export function Layout (props) {
               </div>
               <div className='user-menu'>
                 <IconDropdownNav>
-                  <IconDropdownNavItem onClick={() => copyToken('idToken')} title='Copy id-token' />
-                  <IconDropdownNavItem onClick={() => copyToken('token')} title='Copy token' />
-                  <IconDropdownNavItem onClick={() => logout()} title='Logg ut' />
+                  <IconDropdownNavItem closeOnClick onClick={() => copyToken('idToken')} title='Copy id-token' />
+                  <IconDropdownNavItem closeOnClick onClick={() => copyToken('token')} title='Copy token' />
+                  <IconDropdownNavItem closeOnClick onClick={() => logout()} title='Logg ut' />
                 </IconDropdownNav>
               </div>
             </div>
@@ -123,9 +123,9 @@ export function Layout (props) {
               <InitialsBadge className='user-image' firstName={user.givenName} lastName={user.surname} />
               <div className='user-menu'>
                 <IconDropdownNav>
-                  <IconDropdownNavItem onClick={() => copyToken('idToken')} title='Copy id-token' />
-                  <IconDropdownNavItem onClick={() => copyToken('token')} title='Copy token' />
-                  <IconDropdownNavItem onClick={() => logout()} title='Logg ut' />
+                  <IconDropdownNavItem closeOnClick onClick={() => copyToken('idToken')} title='Copy id-token' />
+                  <IconDropdownNavItem closeOnClick onClick={() => copyToken('token')} title='Copy token' />
+                  <IconDropdownNavItem closeOnClick onClick={() => logout()} title='Logg ut' />
                 </IconDropdownNav>
               </div>
             </div>
