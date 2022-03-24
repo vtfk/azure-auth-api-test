@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@vtfk/components": "0.6.3",
-    "@vtfk/react-msal": "2.0.2",
+    "@vtfk/react-msal": "2.0.3",
     "codemirror": "5.65.2",
     "react": "17.0.2",
     "react-codemirror2": "7.2.1",
