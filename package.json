@@ -39,7 +39,7 @@
     ]
   },
   "devDependencies": {
-    "msw": "0.39.2",
+    "msw": "0.44.0",
     "standard": "17.0.0"
   }
 }
