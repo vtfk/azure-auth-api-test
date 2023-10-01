@@ -7,7 +7,7 @@
     "@vtfk/react-msal": "2.0.3",
     "codemirror": "5.65.14",
     "react": "18.1.0",
-    "react-codemirror2": "7.2.1",
+    "react-codemirror2": "7.3.0",
     "react-dom": "18.1.0",
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.1",
